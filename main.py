@@ -1,26 +1,21 @@
 # IDEA, длина ключа 128 бит.
-import pickle
+import os
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-"""
-algorithm = algorithms.IDEA(16) # тут байты, 128 бит
-cipher = Cipher(algorithm, mode=None)
-encryptor = cipher.encryptor()
-ct = encryptor.update(b"a secret message")
-decryptor = cipher.decryptor()
-decryptor.update(ct)
-"""
-print(type(private_key))
-print(private_key)
-print(type(public_key))
-print(public_key)
+
 # 1.1. Сгеренировать ключ для симметричного алгоритма.
 # 1.2. Сгенерировать ключи для ассиметричного алгоритма.
 # 1.3. Сериализовать ассиметричные ключи.
 # 1.4. Зашифровать ключ симметричного шифрования открытым ключом и сохранить по указанному пути.
 def hybrid_system_encryption(path_enc, path_open, path_close):
+    """Hybrid System key generation"""
+    # Генерация ключа для симметричного алгоритма.
+    key = os.urandom(16)
+    algorithm = algorithms.IDEA(key)  # тут байты, 128 бит
+    cipher_key = Cipher(algorithm, mode=None)
+
     # Генерация ключей для ассиметричного алгоритма.
     keys = rsa.generate_private_key(
         public_exponent=65537,
@@ -39,10 +34,15 @@ def hybrid_system_encryption(path_enc, path_open, path_close):
                                                     format=serialization.PrivateFormat.TraditionalOpenSSL,
                                                     encryption_algorithm=serialization.NoEncryption()))
 
-
+    # сериализация ключа симмеричного алгоритма в файл
+    with open(path_enc, 'wb') as key_file:
+        key_file.write(cipher_key)
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print("gg не будет")
-
+    key = os.urandom(16)
+    algorithm = algorithms.IDEA(key)  # тут байты, 128 бит
+    cipher = Cipher(algorithm, mode=None)
+    print(cipher)
